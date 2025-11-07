@@ -6,30 +6,26 @@
  * @return {object}
  */
 function convertToObject(sourceString) {
-  const stringArr = sourceString.split(';');
+  const styleDeclarations = sourceString.split(';');
 
-  stringArr.filter((val) => val !== '');
+  const styleObject = styleDeclarations.reduce((accumulator, val) => {
+    const correctedValue = val.replaceAll('\n', '').trim();
 
-  const result = {};
+    if (correctedValue.length !== 0) {
+      const k = correctedValue.split(':')[0].trim();
+      let v = correctedValue.split(':')[1].trim();
 
-  for (let val of stringArr) {
-    val = val.replaceAll('\n', '').trim();
+      if (v.includes(',')) {
+        v = v.replaceAll(',', ',\n');
+      }
 
-    if (val.length === 0) {
-      continue;
+      return Object.assign(accumulator, { [k]: `${v}` });
+    } else {
+      return accumulator;
     }
+  }, {});
 
-    const k = val.split(':')[0].trim();
-    let v = val.split(':')[1].trim();
-
-    if (v.includes(',')) {
-      v = v.replaceAll(',', ',\n');
-    }
-
-    result[k] = `${v}`;
-  }
-
-  return result;
+  return styleObject;
 }
 
 module.exports = convertToObject;
