@@ -12,14 +12,16 @@ function convertToObject(sourceString) {
     const correctedValue = val.replaceAll('\n', '').trim();
 
     if (correctedValue.length !== 0) {
-      const k = correctedValue.split(':')[0].trim();
-      let v = correctedValue.split(':')[1].trim();
+      if (correctedValue.includes(':')) {
+        const k = correctedValue.split(':')[0].trim();
+        let v = correctedValue.split(':')[1].trim();
 
-      if (v.includes(',')) {
-        v = v.replaceAll(',', ',\n');
+        if (v.includes(',')) {
+          v = v.replaceAll(',', ',\n');
+        }
+
+        return Object.assign(accumulator, { [k]: `${v}` });
       }
-
-      return Object.assign(accumulator, { [k]: `${v}` });
     } else {
       return accumulator;
     }
